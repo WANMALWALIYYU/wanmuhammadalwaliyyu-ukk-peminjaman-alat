@@ -60,6 +60,7 @@ Database terdiri dari beberapa tabel utama sebagai berikut:
 
 -activity_logs
 
+
 ### Tabel users
 
 Tabel users digunakan untuk menyimpan data pengguna sistem seperti admin, petugas, dan user.
@@ -81,6 +82,7 @@ Tabel users digunakan untuk menyimpan data pengguna sistem seperti admin, petuga
 | updated_at        | timestamp | Waktu diubah                     |
 | deleted_at        | timestamp | Soft delete                      |
 
+
 ### Tabel categories
 
 Tabel categories digunakan untuk menyimpan data kategori alat atau produk.
@@ -95,6 +97,7 @@ Tabel categories digunakan untuk menyimpan data kategori alat atau produk.
 | created_at         | timestamp | Waktu dibuat         |
 | updated_at         | timestamp | Waktu diubah         |
 | deleted_at         | timestamp | Soft delete          |
+
 
 ### Tabel produks
 
@@ -115,6 +118,7 @@ Tabel produks digunakan untuk menyimpan data alat yang dapat dipinjam.
 | created_at  | timestamp   | Waktu dibuat                      |
 | updated_at  | timestamp   | Waktu diubah                      |
 | deleted_at  | timestamp   | Soft delete                       |
+
 
 ### Tabel transaksis
 
@@ -148,14 +152,23 @@ Tabel transaksis digunakan untuk menyimpan data utama peminjaman alat.
 | deleted_at         | timestamp   | Soft delete                |
 
 Status Transaksi:
+
 -menunggu_persetujuan
+
 -disetujui
+
 -ditolak
+
 -dikirim
+
 -dipinjam
+
 -dikembalikan
+
 -selesai
+
 -dibatalkan
+
 
 ### Tabel detail_transaksis
 
@@ -176,6 +189,7 @@ Tabel detail_transaksis digunakan untuk menyimpan detail produk dalam setiap tra
 | updated_at      | timestamp   | Waktu diubah         |
 | deleted_at      | timestamp   | Soft delete          |
 
+
 ### Tabel pengirimans
 
 Tabel pengirimans digunakan untuk mencatat proses pengiriman barang kepada peminjam.
@@ -193,6 +207,7 @@ Tabel pengirimans digunakan untuk mencatat proses pengiriman barang kepada pemin
 | created_at          | timestamp   | Waktu dibuat         |
 | updated_at          | timestamp   | Waktu diubah         |
 | deleted_at          | timestamp   | Soft delete          |
+
 
 ### Tabel pengembalians
 
@@ -222,12 +237,19 @@ Tabel pengembalians digunakan untuk mencatat proses pengembalian barang.
 | deleted_at                 | timestamp   | Soft delete           |
 
 Status Pengembalian:
+
 -menunggu_pengiriman
+
 -dikirim
+
 -sampai
+
 -diproses
+
 -selesai
+
 -dibatalkan
+
 
 ### Tabel activity_logs
 
