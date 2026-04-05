@@ -16,14 +16,17 @@ Sistem ini digunakan untuk mengelola peminjaman alat secara online berbasis Lara
 -User memilih alat/produk yang ingin dipinjam.
 
 -User melakukan pembayaran deposit awal sesuai syarat peminjaman.
+
 ---
 3.Persetujuan Peminjaman oleh Petugas
 
 -Petugas memverifikasi pengajuan peminjaman.
+
 ---
 4.Proses Pengiriman oleh Petugas
 
 -Petugas menyiapkan barang dan melakukan pengiriman ke user.
+
 ---
 5.User menerima barang dan mengonfirmasi penerimaan.
 
@@ -32,14 +35,17 @@ Sistem ini digunakan untuk mengelola peminjaman alat secara online berbasis Lara
 7.Proses Pengembalian
 
 -Setelah masa peminjaman selesai, user membuat request pengembalian.
+
 ---
 8.Pengecekan Barang oleh Petugas
 
 -Petugas menerima barang dan memeriksa kondisi.
+
 ---
 9.Pembayaran Total & Selesai
 
 -User membayar total biaya ( biaya sewa - deposit + denda(jika ada) ).
+
 ---
 10.Selesai Proses Peminjaman
 
