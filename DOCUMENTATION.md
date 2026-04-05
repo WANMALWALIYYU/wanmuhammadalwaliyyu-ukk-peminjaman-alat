@@ -10,10 +10,6 @@ Sistem ini digunakan untuk mengelola peminjaman alat secara online berbasis Lara
 ## Alur Sistem
 
 1.Registrasi & Login
-
--User membuat akun baru.
-
--User login ke sistem menggunakan akun yang telah dibuat.
     
 2.Peminjaman Alat
 
@@ -21,33 +17,31 @@ Sistem ini digunakan untuk mengelola peminjaman alat secara online berbasis Lara
 
 -User melakukan pembayaran deposit awal sesuai syarat peminjaman.
 
--Status transaksi: menunggu persetujuan.
-
 3.Persetujuan Peminjaman oleh Petugas
 
 -Petugas memverifikasi pengajuan peminjaman.
 
--Jika disetujui → lanjut ke proses pengiriman.
+4.Proses Pengiriman oleh Petugas
 
--Jika ditolak → user mendapatkan catatan penolakan.
+-Petugas menyiapkan barang dan melakukan pengiriman ke user.
 
-Proses Pengiriman oleh Petugas
-4.1. Petugas menyiapkan barang dan melakukan pengiriman ke user.
-4.2. Status transaksi: dikirim.
-4.3. User menerima barang dan mengonfirmasi penerimaan.
-4.4. Status transaksi berubah menjadi: sedang dipinjam.
-Penggunaan Barang
-5.1. User menggunakan alat sesuai durasi peminjaman.
-Proses Pengembalian
-6.1. Setelah masa peminjaman selesai, user membuat request pengembalian.
-6.2. Status pengembalian: dikirim (oleh user ke petugas).
-Pengecekan Barang oleh Petugas
-7.1. Petugas menerima barang dan memeriksa kondisi.
-7.2. Jika ada kerusakan → ditambahkan biaya denda/kerusakan.
-7.3. Status pengembalian: diproses atau selesai jika tidak ada masalah.
-Pembayaran Total & Selesai
-8.1. User membayar total biaya (termasuk deposit, biaya sewa, denda jika ada).
-8.2. Transaksi dianggap selesai.
+5.User menerima barang dan mengonfirmasi penerimaan.
+
+6. User menggunakan alat sesuai durasi peminjaman.
+
+7.Proses Pengembalian
+
+-Setelah masa peminjaman selesai, user membuat request pengembalian.
+
+8.Pengecekan Barang oleh Petugas
+
+-Petugas menerima barang dan memeriksa kondisi.
+
+9.Pembayaran Total & Selesai
+
+-User membayar total biaya ( biaya sewa - deposit + denda(jika ada) ).
+
+10.Selesai Proses Peminjaman
 
 ---
 
