@@ -311,6 +311,26 @@ Tabel activity_logs digunakan untuk mencatat aktivitas pengguna dalam sistem.
 
 ---
 
+##Relasi Antar Tabel
+
+1.users → transaksis (one-to-many)
+
+2.categories → produks (one-to-many)
+
+3.produks → detail_transaksis (one-to-many)
+
+4.transaksis → detail_transaksis (one-to-many)
+
+5.transaksis → pengirimans (one-to-one)
+
+6.transaksis → pengembalians (one-to-one)
+
+7.users → pengirimans (one-to-many)
+
+8.users → pengembalians (one-to-many)
+
+---
+
 ## Teknologi
 
 - Laravel
