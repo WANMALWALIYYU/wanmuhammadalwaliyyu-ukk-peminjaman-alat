@@ -17,7 +17,7 @@ Sistem ini digunakan untuk mengelola peminjaman alat secara online berbasis Lara
 
 -User melakukan pembayaran deposit awal sesuai syarat peminjaman.
 
----
+-
 3.Persetujuan Peminjaman oleh Petugas
 
 -Petugas memverifikasi pengajuan peminjaman.
