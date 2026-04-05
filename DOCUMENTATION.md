@@ -38,7 +38,7 @@ User → Register → Login
 
 ---
 
-📚 Struktur Database
+## Struktur Database
 
 Database pada sistem ini digunakan untuk mengelola data pengguna, kategori alat, produk, transaksi peminjaman, pengiriman, pengembalian, serta aktivitas sistem.
 
