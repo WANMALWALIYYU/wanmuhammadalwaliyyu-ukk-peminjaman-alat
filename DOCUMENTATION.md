@@ -45,15 +45,23 @@ Database pada sistem ini digunakan untuk mengelola data pengguna, kategori alat,
 Database terdiri dari beberapa tabel utama sebagai berikut:
 
 -users
+
 -categories
+
 -produks
+
 -transaksis
+
 -detail_transaksis
+
 -pengirimans
+
 -pengembalians
+
 -activity_logs
 
-🧑‍💻 Tabel users
+### Tabel users
+
 Tabel users digunakan untuk menyimpan data pengguna sistem seperti admin, petugas, dan user.
 
 | Field             | Tipe      | Keterangan                       |
@@ -73,7 +81,8 @@ Tabel users digunakan untuk menyimpan data pengguna sistem seperti admin, petuga
 | updated_at        | timestamp | Waktu diubah                     |
 | deleted_at        | timestamp | Soft delete                      |
 
-📂 Tabel categories
+### Tabel categories
+
 Tabel categories digunakan untuk menyimpan data kategori alat atau produk.
 | Field              | Tipe      | Keterangan           |
 | ------------------ | --------- | -------------------- |
@@ -87,7 +96,8 @@ Tabel categories digunakan untuk menyimpan data kategori alat atau produk.
 | updated_at         | timestamp | Waktu diubah         |
 | deleted_at         | timestamp | Soft delete          |
 
-🛠️ Tabel produks
+### Tabel produks
+
 Tabel produks digunakan untuk menyimpan data alat yang dapat dipinjam.
 | Field       | Tipe        | Keterangan                        |
 | ----------- | ----------- | --------------------------------- |
@@ -106,7 +116,8 @@ Tabel produks digunakan untuk menyimpan data alat yang dapat dipinjam.
 | updated_at  | timestamp   | Waktu diubah                      |
 | deleted_at  | timestamp   | Soft delete                       |
 
-📄 Tabel transaksis
+### Tabel transaksis
+
 Tabel transaksis digunakan untuk menyimpan data utama peminjaman alat.
 | Field              | Tipe        | Keterangan                 |
 | ------------------ | ----------- | -------------------------- |
@@ -146,7 +157,8 @@ Status Transaksi:
 -selesai
 -dibatalkan
 
-📦 Tabel detail_transaksis
+### Tabel detail_transaksis
+
 Tabel detail_transaksis digunakan untuk menyimpan detail produk dalam setiap transaksi.
 | Field           | Tipe        | Keterangan           |
 | --------------- | ----------- | -------------------- |
@@ -164,7 +176,8 @@ Tabel detail_transaksis digunakan untuk menyimpan detail produk dalam setiap tra
 | updated_at      | timestamp   | Waktu diubah         |
 | deleted_at      | timestamp   | Soft delete          |
 
-🚚 Tabel pengirimans
+### Tabel pengirimans
+
 Tabel pengirimans digunakan untuk mencatat proses pengiriman barang kepada peminjam.
 | Field               | Tipe        | Keterangan           |
 | ------------------- | ----------- | -------------------- |
@@ -181,7 +194,8 @@ Tabel pengirimans digunakan untuk mencatat proses pengiriman barang kepada pemin
 | updated_at          | timestamp   | Waktu diubah         |
 | deleted_at          | timestamp   | Soft delete          |
 
-🔄 Tabel pengembalians
+### Tabel pengembalians
+
 Tabel pengembalians digunakan untuk mencatat proses pengembalian barang.
 | Field                      | Tipe        | Keterangan            |
 | -------------------------- | ----------- | --------------------- |
@@ -215,7 +229,8 @@ Status Pengembalian:
 -selesai
 -dibatalkan
 
-📜 Tabel activity_logs
+### Tabel activity_logs
+
 Tabel activity_logs digunakan untuk mencatat aktivitas pengguna dalam sistem.
 | Field         | Tipe        | Keterangan          |
 | ------------- | ----------- | ------------------- |
