@@ -1189,6 +1189,28 @@
                         @endif
                     @endif
 
+                    @if($transaksi->status == 'dikembalikan')
+                        @php
+                            $subtotal = $transaksi->detailTransaksis->sum('subtotal');
+                            $deposit = $transaksi->jumlah_deposit;
+                            $sisa = $subtotal - $deposit;
+                            $denda = $transaksi->pengembalian?->total_biaya_tambahan ?? 0;
+                            $totalBayar = $sisa + $denda;
+                        @endphp
+                        @if($totalBayar > 0)
+                            <a href="{{ route('user.payment.create', $transaksi->id) }}"
+                            class="btn-action" style="background: #10b981; color: white;">
+                                <i class="fas fa-credit-card me-1"></i>
+                                Bayar Pelunasan
+                                <small class="ms-1">(Rp {{ number_format($totalBayar, 0, ',', '.') }})</small>
+                            </a>
+                        @else
+                            <span class="btn-action" style="background: #10b981; color: white; cursor: default;">
+                                <i class="fas fa-check-circle me-1"></i> Lunas
+                            </span>
+                        @endif
+                    @endif
+
                     <a href="{{ route('transaksi.show', $transaksi->id) }}" class="btn-action btn-detail">
                         <i class="fas fa-eye"></i> Detail
                     </a>

@@ -65,6 +65,11 @@ class Transaksi extends Model
         return $this->hasOne(Pengiriman::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'transaksi_id');
+    }
+
     /*
     |----------------------------------------------------------------------
     | SCOPES
@@ -132,6 +137,19 @@ class Transaksi extends Model
     public function getSisaPembayaranAttribute()
     {
         return $this->total_biaya - $this->jumlah_deposit;
+    }
+
+    public function getLatestPaymentAttribute()
+    {
+        return $this->payments()->latest()->first();
+    }
+
+    public function getPelunasanPaymentAttribute()
+    {
+        return $this->payments()
+            ->where('jenis_pembayaran', Payment::JENIS_PELUNASAN)
+            ->whereIn('transaction_status', [Payment::STATUS_SETTLEMENT, Payment::STATUS_CAPTURE])
+            ->first();
     }
 
     /*

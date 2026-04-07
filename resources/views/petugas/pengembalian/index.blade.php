@@ -1,4 +1,3 @@
-{{-- resources/views/petugas/pengembalian/index.blade.php --}}
 @extends('petugas.index')
 
 @section('title', 'Manajemen Pengembalian')

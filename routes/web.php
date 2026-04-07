@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Admin\PengembalianController as AdminPengembalianController;
 use App\Http\Controllers\Admin\ProdukController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\Admin\PengirimanController as AdminPengirimanController;
 use App\Http\Controllers\Admin\TransaksiController as AdminTransaksiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Petugas\DashboardController as PetugasDashboardController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\Petugas\PeminjamanController;
 use App\Http\Controllers\Petugas\PengembalianController as PetugasPengembalianController;
 use App\Http\Controllers\Petugas\PengirimanController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\PengembalianController as UserPengembalianController;
 use App\Http\Controllers\User\UserPengirimanController;
 use App\Http\Controllers\UserController;
@@ -110,11 +113,25 @@ Route::prefix('admin')->middleware(['auth', 'check.level:admin'])->group(functio
     // User Management
     Route::get('/user', [AdminUserController::class, 'index'])->name('user.index');
 
-    // Transaksi Management (Admin)
+    // Transaksi Management
     Route::get('/transaksi', [AdminTransaksiController::class, 'index'])->name('admin.transaksi.index');
     Route::get('/transaksi/{id}', [AdminTransaksiController::class, 'show'])->name('admin.transaksi.show');
     Route::get('/transaksi-stats', [AdminTransaksiController::class, 'getStats'])->name('admin.transaksi.stats');
     Route::get('/transaksi-export', [AdminTransaksiController::class, 'export'])->name('admin.transaksi.export');
+
+    // Pengiriman Management
+    Route::get('/pengiriman', [AdminPengirimanController::class, 'index'])->name('admin.pengiriman.index');
+    Route::get('/pengiriman/{id}', [AdminPengirimanController::class, 'show'])->name('admin.pengiriman.show');
+    Route::get('/pengiriman-stats', [AdminPengirimanController::class, 'getStats'])->name('admin.pengiriman.stats');
+    Route::get('/pengiriman-export', [AdminPengirimanController::class, 'export'])->name('admin.pengiriman.export');
+    Route::get('/pengiriman-chart', [AdminPengirimanController::class, 'chartData'])->name('admin.pengiriman.chart');
+
+    // Pengembalian Management
+    Route::get('/pengembalian', [AdminPengembalianController::class, 'index'])->name('admin.pengembalian.index');
+    Route::get('/pengembalian/{id}', [AdminPengembalianController::class, 'show'])->name('admin.pengembalian.show');
+    Route::get('/pengembalian-export', [AdminPengembalianController::class, 'export'])->name('admin.pengembalian.export');
+    Route::get('/pengembalian-stats', [AdminPengembalianController::class, 'getStats'])->name('admin.pengembalian.stats');
+
 
     // Activity Logs
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
@@ -188,4 +205,13 @@ Route::prefix('user')->middleware(['auth', 'check.level:user,admin'])->group(fun
     Route::post('/pengembalian/store/{id}', [UserPengembalianController::class, 'store'])->name('user.pengembalian.store');
     Route::get('/pengembalian/{id}', [UserPengembalianController::class, 'show'])->name('user.pengembalian.show');
     Route::post('/pengembalian/{id}/update-shipping', [UserPengembalianController::class, 'updateShipping'])->name('user.pengembalian.update-shipping');
+
+    //Payment
+    Route::get('/pembayaran/{id}', [PaymentController::class, 'create'])->name('user.payment.create');
+    Route::get('/pembayaran/selesai', [PaymentController::class, 'success'])->name('user.payment.success');
+    Route::get('/pembayaran/pending', [PaymentController::class, 'pending'])->name('user.payment.pending');
+    Route::get('/pembayaran/gagal', [PaymentController::class, 'error'])->name('user.payment.error');
 });
+
+// Webhook midtrans
+Route::post('/api/midtrans/notification', [PaymentController::class, 'notification'])->name('midtrans.notification');

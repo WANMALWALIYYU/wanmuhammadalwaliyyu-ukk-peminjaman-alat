@@ -375,7 +375,7 @@
                     </a>
                     <a class="nav-link {{ request()->routeIs('petugas.pengembalian*') ? 'active' : '' }}"
                     href="{{ route('petugas.pengembalian.index') }}">
-                        <i class="fas fa-hand-holding"></i> Pengembalian
+                        <i class="fas fa-history"></i> Pengembalian
                     </a>
                     <a class="nav-link {{ request()->routeIs('petugas.pengiriman*') ? 'active' : '' }}"
                     href="{{ route('petugas.pengiriman.index') }}">

@@ -592,18 +592,20 @@
                     <i class="fas fa-chevron-right dropdown-arrow"></i>
                 </a>
                 <div class="nav-submenu">
-                    <a href="{{ route('admin.dashboard') }}" class="nav-link-custom {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('admin.dashboard') }}"
+                    class="nav-link-custom {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <i class="fas fa-chart-line"></i> Dashboard View
                     </a>
                     <a href="javascript:void(0);" class="nav-link-custom">
-                        <i class="fas fa-chart-bar"></i> Analytics
+                        <i class="fas fa-chart-pie"></i> Analytics
                     </a>
                 </div>
             </div>
 
             <!-- Users -->
             <div class="nav-item">
-                <a href="{{ route('user.index') }}" class="nav-link-custom {{ request()->routeIs('user.*') ? 'active' : '' }}">
+                <a href="{{ route('user.index') }}"
+                class="nav-link-custom {{ request()->routeIs('user.*') ? 'active' : '' }}">
                     <i class="fas fa-users"></i>
                     <span>Users</span>
                 </a>
@@ -611,7 +613,8 @@
 
             <!-- Kategori -->
             <div class="nav-item">
-                <a href="{{ route('kategori.index') }}" class="nav-link-custom {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+                <a href="{{ route('kategori.index') }}"
+                class="nav-link-custom {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
                     <i class="fas fa-tags"></i>
                     <span>Kategori</span>
                 </a>
@@ -619,23 +622,53 @@
 
             <!-- Produk -->
             <div class="nav-item">
-                <a href="{{ route('produk.index') }}" class="nav-link-custom {{ request()->routeIs('produk.*') ? 'active' : '' }}">
-                    <i class="fas fa-boxes"></i>
+                <a href="{{ route('produk.index') }}"
+                class="nav-link-custom {{ request()->routeIs('produk.*') ? 'active' : '' }}">
+                    <i class="fas fa-box-open"></i>
                     <span>Produk</span>
                 </a>
             </div>
 
-            <!-- Payment -->
+            <!-- Transaksi -->
             <div class="nav-item">
-                <a href="{{ route('admin.transaksi.index') }}" class="nav-link-custom {{ request()->routeIs('admin.transaksi*') ? 'active' : '' }}">
-                    <i class="fas fa-dollar-sign"></i>
-                    <span>Payment</span>
+                <a href="{{ route('admin.transaksi.index') }}"
+                class="nav-link-custom {{ request()->routeIs('admin.transaksi*') ? 'active' : '' }}">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Transaksi</span>
+                </a>
+            </div>
+
+            <!-- Pengembalian -->
+            <div class="nav-item">
+                <a href="{{ route('admin.pengembalian.index') }}"
+                class="nav-link-custom {{ request()->routeIs('admin.pengembalian*') ? 'active' : '' }}">
+                    <i class="fas fa-undo-alt"></i>
+                    <span>Pengembalian</span>
+                </a>
+            </div>
+
+            <!-- Pengiriman -->
+            <div class="nav-item">
+                <a href="{{ route('admin.pengiriman.index') }}"
+                class="nav-link-custom {{ request()->routeIs('admin.pengiriman*') ? 'active' : '' }}">
+                    <i class="fas fa-truck"></i>
+                    <span>Pengiriman</span>
+                </a>
+            </div>
+
+            <!-- Pembayaran -->
+            <div class="nav-item">
+                <a href="{{ route('admin.pengiriman.index') }}"
+                class="nav-link-custom {{ request()->routeIs('admin.pengiriman*') ? 'active' : '' }}">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Pembayaran</span>
                 </a>
             </div>
 
             <!-- Log Activity -->
             <div class="nav-item">
-                <a href="{{ route('activity-logs.index') }}" class="nav-link-custom {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}">
+                <a href="{{ route('activity-logs.index') }}"
+                class="nav-link-custom {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}">
                     <i class="fas fa-history"></i>
                     <span>Log Activity</span>
                 </a>
@@ -644,14 +677,20 @@
             <!-- Settings Dropdown -->
             <div class="nav-item nav-dropdown">
                 <a href="javascript:void(0);" class="nav-link-custom" onclick="toggleDropdown(this)">
-                    <i class="fas fa-cog"></i>
+                    <i class="fas fa-cogs"></i>
                     <span>Settings</span>
                     <i class="fas fa-chevron-right dropdown-arrow"></i>
                 </a>
                 <div class="nav-submenu">
-                    <a href="javascript:void(0);" class="nav-link-custom">General</a>
-                    <a href="javascript:void(0);" class="nav-link-custom">SEO</a>
-                    <a href="javascript:void(0);" class="nav-link-custom">Email</a>
+                    <a href="javascript:void(0);" class="nav-link-custom">
+                        <i class="fas fa-sliders-h"></i> General
+                    </a>
+                    <a href="javascript:void(0);" class="nav-link-custom">
+                        <i class="fas fa-search"></i> SEO
+                    </a>
+                    <a href="javascript:void(0);" class="nav-link-custom">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
                 </div>
             </div>
 
@@ -664,6 +703,7 @@
                     <span>Help Center</span>
                 </a>
             </div>
+
         </nav>
 
         <!-- Sidebar Card -->
