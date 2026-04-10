@@ -172,6 +172,7 @@ Route::prefix('petugas')->middleware(['auth', 'check.level:petugas,admin'])->gro
     Route::post('/pengembalian/{id}/mark-sampai', [PetugasPengembalianController::class, 'markAsSampai'])->name('petugas.pengembalian.mark-sampai');
     Route::get('/pengembalian/{id}/pemeriksaan', [PetugasPengembalianController::class, 'prosesPemeriksaan'])->name('petugas.pengembalian.pemeriksaan');
     Route::post('/pengembalian/{id}/pemeriksaan', [PetugasPengembalianController::class, 'storePemeriksaan'])->name('petugas.pengembalian.store-pemeriksaan');
+    Route::post('/pengembalian/{id}/complete', [PetugasPengembalianController::class, 'complete'])->name('petugas.pengembalian.complete');
 });
 
 // ==================== USER ROUTES ====================

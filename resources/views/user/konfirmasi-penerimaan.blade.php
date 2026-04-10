@@ -1,4 +1,3 @@
-{{-- resources/views/user/konfirmasi-penerimaan.blade.php --}}
 @extends('index')
 
 @section('pages', 'Konfirmasi Penerimaan Barang')

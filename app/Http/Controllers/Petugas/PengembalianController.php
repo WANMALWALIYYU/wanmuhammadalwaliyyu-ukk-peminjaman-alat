@@ -42,7 +42,6 @@ class PengembalianController extends Controller
 
         // Stats
         $stats = [
-            'menunggu_pengiriman' => Pengembalian::where('status', Pengembalian::STATUS_MENUNGGU_PENGIRIMAN)->count(),
             'dikirim' => Pengembalian::where('status', Pengembalian::STATUS_DIKIRIM)->count(),
             'sampai' => Pengembalian::where('status', Pengembalian::STATUS_SAMPAI)->count(),
             'diproses' => Pengembalian::where('status', Pengembalian::STATUS_DIPROSES)->count(),
@@ -71,6 +70,7 @@ class PengembalianController extends Controller
 
     /**
      * Mark as arrived (barang sampai)
+     * Status changes from DIKIRIM to SAMPAI
      */
     public function markAsSampai(Request $request, $id)
     {
@@ -91,11 +91,7 @@ class PengembalianController extends Controller
                 $fotoPath = $file->storeAs('pengembalian/petugas', $namaFile, 'public');
             }
 
-            $pengembalian->update([
-                'status' => Pengembalian::STATUS_SAMPAI,
-                'foto_barang_setelah_sampai' => $fotoPath,
-                'tanggal_sampai' => now(),
-            ]);
+            $pengembalian->markAsSampai($fotoPath);
 
             $this->logActivity(
                 'mark_arrived',
@@ -147,6 +143,7 @@ class PengembalianController extends Controller
 
     /**
      * Store inspection result
+     * Status changes from SAMPAI to DIPROSES
      */
     public function storePemeriksaan(Request $request, $id)
     {
@@ -185,7 +182,42 @@ class PengembalianController extends Controller
             DB::commit();
 
             return redirect()->route('petugas.pengembalian.show', $pengembalian->id)
-                ->with('success', 'Pemeriksaan selesai. Silakan lanjutkan ke proses pembayaran.');
+                ->with('success', 'Pemeriksaan selesai. Status berubah menjadi "Diproses". Silakan klik tombol "Selesaikan Pengembalian" setelah pembayaran user selesai.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Complete the return process
+     * Status changes from DIPROSES to SELESAI
+     * This is called by petugas after user completes payment
+     */
+    public function complete($id)
+    {
+        $pengembalian = Pengembalian::where('status', Pengembalian::STATUS_DIPROSES)
+            ->findOrFail($id);
+
+        DB::beginTransaction();
+
+        try {
+            $pengembalian->complete();
+
+            $this->logActivity(
+                'complete',
+                'pengembalian',
+                $pengembalian->id,
+                $pengembalian->transaksi->kode_transaksi,
+                "Petugas " . Auth::user()->name . " menyelesaikan proses pengembalian untuk transaksi {$pengembalian->transaksi->kode_transaksi}"
+            );
+
+            DB::commit();
+
+            return redirect()->route('petugas.pengembalian.show', $pengembalian->id)
+                ->with('success', 'Proses pengembalian selesai. Status berubah menjadi "Selesai". User sekarang dapat melakukan pembayaran pelunasan.');
 
         } catch (\Exception $e) {
             DB::rollBack();

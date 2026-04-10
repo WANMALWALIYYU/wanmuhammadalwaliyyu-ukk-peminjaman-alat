@@ -1,5 +1,4 @@
 <?php
-// app/Models/Pengembalian.php
 
 namespace App\Models;
 
@@ -55,9 +54,9 @@ class Pengembalian extends Model
     {
         $badges = [
             self::STATUS_MENUNGGU_PENGIRIMAN => '<span class="badge bg-warning text-dark">Menunggu Pengiriman</span>',
-            self::STATUS_DIKIRIM => '<span class="badge bg-info text-dark">Dalam Pengiriman</span>',
-            self::STATUS_SAMPAI => '<span class="badge bg-primary">Barang Sampai</span>',
-            self::STATUS_DIPROSES => '<span class="badge bg-secondary">Sedang Diproses</span>',
+            self::STATUS_DIKIRIM => '<span class="badge bg-info text-dark">Dikirim</span>',
+            self::STATUS_SAMPAI => '<span class="badge bg-primary">Sampai</span>',
+            self::STATUS_DIPROSES => '<span class="badge bg-secondary">Diproses</span>',
             self::STATUS_SELESAI => '<span class="badge bg-success">Selesai</span>',
             self::STATUS_DIBATALKAN => '<span class="badge bg-danger">Dibatalkan</span>',
         ];
@@ -101,7 +100,7 @@ class Pengembalian extends Model
             'tanggal_dikirim' => now(),
         ]);
 
-        // Update transaksi status
+        // Update transaksi status to DIKEMBALIKAN
         $this->transaksi->update(['status' => Transaksi::STATUS_DIKEMBALIKAN]);
     }
 

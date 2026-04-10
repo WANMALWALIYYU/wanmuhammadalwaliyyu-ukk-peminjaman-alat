@@ -8,6 +8,7 @@
     <meta name="keyword" content="medical, rental, admin" />
     <meta name="author" content="MediCareRent" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/image/logo-mcr.png') }}" />
     <title>MediCareRent - @yield('title')</title>
 
     <!-- Favicon -->

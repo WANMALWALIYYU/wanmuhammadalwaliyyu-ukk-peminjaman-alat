@@ -1,4 +1,3 @@
-{{-- resources/views/user/pengembalian/show.blade.php --}}
 @extends('index')
 
 @section('pages', 'Status Pengembalian')
@@ -8,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-                <div class="card-header" style="background: linear-gradient(135deg, #0b2c5d, #1f3c88); color: white;">
+                <div class="card-header" style="background: linear-gradient(145deg, #0b2c5d, #1f3c88); color: white;">
                     <h4 class="mb-0">
                         <i class="fas fa-truck-moving me-2"></i>
                         Status Pengembalian
@@ -35,7 +34,7 @@
 
                         <div class="position-relative">
                             <div class="progress-line" style="height: 4px; background: #e2e8f0; position: absolute; top: 30px; left: 0; right: 0; z-index: 1;"></div>
-                            <div class="progress-line-fill" style="height: 4px; background: linear-gradient(90deg, #10b981, #0b2c5d); position: absolute; top: 30px; left: 0; width: {{ ($stepIndex / (count($steps) - 1)) * 100 }}%; z-index: 2; transition: width 0.5s ease;"></div>
+                            <div class="progress-line-fill" style="height: 4px; background: linear-gradient(90deg, #0b2c5d, #1f3c88); position: absolute; top: 30px; left: 0; width: {{ ($stepIndex / (count($steps) - 1)) * 100 }}%; z-index: 2; transition: width 0.5s ease;"></div>
 
                             <div class="row position-relative" style="z-index: 3;">
                                 @foreach($steps as $key => $step)
@@ -57,17 +56,9 @@
                         </div>
                     </div>
 
-                    <!-- Status Badge -->
-                    <div class="text-center mb-4">
-                        {!! $pengembalian->status_badge !!}
-                        @if($pengembalian->status == 'selesai')
-                            <span class="badge bg-success ms-2"><i class="fas fa-check-circle"></i> Selesai</span>
-                        @endif
-                    </div>
-
                     <!-- Informasi Pengiriman -->
                     <div class="card mb-4 border-0 shadow-sm">
-                        <div class="card-header bg-primary text-white">
+                        <div class="card-header" style="background: linear-gradient(145deg, #0b2c5d, #1f3c88); color: white;">
                             <h5 class="mb-0"><i class="fas fa-truck me-2"></i> Informasi Pengiriman</h5>
                         </div>
                         <div class="card-body">
@@ -99,10 +90,10 @@
                             </div>
 
                             @if($pengembalian->status == 'menunggu_pengiriman')
-                            <div class="alert alert-warning mt-3">
+                            <div class="alert alert-info mt-3" style="background: #e8f0fe; border-color: #0b2c5d; color: #0b2c5d;">
                                 <i class="fas fa-info-circle me-2"></i>
                                 <strong>Belum mengirim barang?</strong> Silakan update resi pengiriman Anda.
-                                <button class="btn btn-sm btn-warning ms-3" data-bs-toggle="collapse" data-bs-target="#updateResiForm">
+                                <button class="btn btn-sm ms-3" style="background: #0b2c5d; color: white;" data-bs-toggle="collapse" data-bs-target="#updateResiForm">
                                     <i class="fas fa-edit"></i> Update Resi
                                 </button>
                             </div>
@@ -118,7 +109,7 @@
                                             <input type="text" name="no_resi" class="form-control" placeholder="No. Resi" required>
                                         </div>
                                         <div class="col-md-2 mb-2">
-                                            <button type="submit" class="btn btn-primary w-100">Simpan</button>
+                                            <button type="submit" class="btn w-100" style="background: linear-gradient(145deg, #0b2c5d, #1f3c88); color: white;">Simpan</button>
                                         </div>
                                     </div>
                                 </form>
@@ -132,8 +123,9 @@
                         @if($pengembalian->foto_barang_dikembalikan)
                         <div class="col-md-6">
                             <div class="card border-0 shadow-sm">
-                                <div class="card-header bg-secondary text-white">
+                                <div class="card-header d-flex" style="background: linear-gradient(145deg, #0b2c5d, #1f3c88); color: white;">
                                     <h6 class="mb-0"><i class="fas fa-camera me-2"></i> Foto Barang Dikirim</h6>
+                                    <small class="opacity-75">(dari peminjam)</small>
                                 </div>
                                 <div class="card-body text-center">
                                     <img src="{{ asset('storage/' . $pengembalian->foto_barang_dikembalikan) }}"
@@ -146,8 +138,8 @@
                         @if($pengembalian->foto_barang_setelah_sampai)
                         <div class="col-md-6">
                             <div class="card border-0 shadow-sm">
-                                <div class="card-header bg-info text-white">
-                                    <h6 class="mb-0"><i class="fas fa-clipboard-check me-2"></i> Foto Setelah Diperiksa</h6>
+                                <div class="card-header" style="background: linear-gradient(145deg, #0b2c5d, #1f3c88); color: white;">
+                                    <h6 class="mb-0"><i class="fas fa-clipboard-check me-2"></i> Foto Barang Sampai</h6>
                                 </div>
                                 <div class="card-body text-center">
                                     <img src="{{ asset('storage/' . $pengembalian->foto_barang_setelah_sampai) }}"
@@ -161,7 +153,7 @@
                     <!-- Hasil Pemeriksaan -->
                     @if($pengembalian->status == 'diproses' || $pengembalian->status == 'selesai')
                     <div class="card mb-4 border-0 shadow-sm">
-                        <div class="card-header" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">
+                        <div class="card-header" style="background: linear-gradient(145deg, #0b2c5d, #1f3c88); color: white;">
                             <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i> Hasil Pemeriksaan Petugas</h5>
                         </div>
                         <div class="card-body">
@@ -194,7 +186,7 @@
                                 </div>
                             </div>
                             @if($pengembalian->catatan_petugas)
-                            <div class="alert alert-secondary mt-3">
+                            <div class="alert mt-3" style="background: #e8f0fe; border-color: #0b2c5d; color: #0b2c5d;">
                                 <strong><i class="fas fa-comment"></i> Catatan Petugas:</strong><br>
                                 {{ $pengembalian->catatan_petugas }}
                             </div>
@@ -204,11 +196,11 @@
 
                     <!-- Rincian Pembayaran -->
                     <div class="card mb-4 border-0 shadow-sm">
-                        <div class="card-header bg-success text-white">
+                        <div class="card-header" style="background: linear-gradient(145deg, #0b2c5d, #1f3c88); color: white;">
                             <h5 class="mb-0"><i class="fas fa-money-bill-wave me-2"></i> Rincian Pembayaran</h5>
                         </div>
                         <div class="card-body">
-                            <div class="bg-light p-3 rounded-4">
+                            <div class="p-3 rounded-4" style="background: #f8f9fa;">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Sisa Pembayaran Awal</span>
                                     <span>Rp {{ number_format($sisaPembayaran, 0, ',', '.') }}</span>
@@ -228,19 +220,19 @@
                                 <hr>
                                 <div class="d-flex justify-content-between">
                                     <strong class="fs-5">Total yang Harus Dibayar</strong>
-                                    <strong class="fs-5 text-success">Rp {{ number_format($pengembalian->total_biaya_yang_harus_dibayar, 0, ',', '.') }}</strong>
+                                    <strong class="fs-5" style="color: #0b2c5d;">Rp {{ number_format($pengembalian->total_biaya_yang_harus_dibayar, 0, ',', '.') }}</strong>
                                 </div>
                             </div>
 
                             @if($pengembalian->status == 'diproses')
-                            <div class="alert alert-info mt-3">
+                            <div class="alert mt-3" style="background: #e8f0fe; border-color: #0b2c5d; color: #0b2c5d;">
                                 <i class="fas fa-credit-card me-2"></i>
                                 <strong>Pembayaran akan segera dibuka.</strong> Silakan cek kembali halaman ini untuk melakukan pembayaran.
                             </div>
                             @endif
 
                             @if($pengembalian->status == 'selesai')
-                            <div class="alert alert-success mt-3">
+                            <div class="alert mt-3" style="background: #e8f0fe; border-color: #0b2c5d; color: #0b2c5d;">
                                 <i class="fas fa-check-circle me-2"></i>
                                 <strong>Proses pengembalian selesai!</strong> Terima kasih telah menggunakan layanan kami.
                             </div>
@@ -250,10 +242,10 @@
                     @endif
 
                     <div class="d-flex justify-content-between">
-                        <a href="{{ route('transaksi.riwayat') }}" class="btn btn-secondary">
+                        <a href="{{ route('transaksi.riwayat') }}" class="btn" style="background: #6c757d; color: white;">
                             <i class="fas fa-arrow-left me-1"></i> Kembali ke Riwayat
                         </a>
-                        <a href="{{ route('user.pengembalian.index') }}" class="btn btn-primary">
+                        <a href="{{ route('user.pengembalian.index') }}" class="btn" style="background: linear-gradient(145deg, #0b2c5d, #1f3c88); color: white;">
                             <i class="fas fa-list me-1"></i> Semua Pengembalian
                         </a>
                     </div>
@@ -291,19 +283,31 @@
     transition: all 0.3s;
 }
 .step-circle.completed {
-    border-color: #10b981;
-    background: #10b981;
+    border-color: #0b2c5d;
+    background: linear-gradient(145deg, #0b2c5d, #1f3c88);
     color: white;
 }
 .step-circle.active {
     border-color: #0b2c5d;
-    background: #0b2c5d;
+    background: linear-gradient(145deg, #0b2c5d, #1f3c88);
     color: white;
     transform: scale(1.1);
     box-shadow: 0 0 0 5px rgba(11,44,93,0.2);
 }
+.text-primary {
+    color: #0b2c5d !important;
+}
 .step-label {
     font-size: 0.8rem;
+}
+.btn-outline-primary {
+    border-color: #0b2c5d;
+    color: #0b2c5d;
+}
+.btn-outline-primary:hover {
+    background: linear-gradient(145deg, #0b2c5d, #1f3c88);
+    border-color: transparent;
+    color: white;
 }
 @media (max-width: 768px) {
     .step-circle {

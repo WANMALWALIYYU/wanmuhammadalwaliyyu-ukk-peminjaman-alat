@@ -116,7 +116,7 @@
                             <td class="status-cell">{!! $transaksi->status_badge !!}</td>
                             <td>
                                 <a href="{{ route('petugas.peminjaman.detail', $transaksi->id) }}"
-                                    class="btn btn-sm btn-outline-primary btn-modern">
+                                    class="btn btn-sm btn-modern text-dark">
                                         <i class="fas fa-eye"></i> Detail
                                 </a>
                             </td>

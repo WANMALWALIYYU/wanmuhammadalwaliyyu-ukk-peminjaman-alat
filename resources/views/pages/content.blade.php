@@ -144,10 +144,6 @@
                 </div>
             @else
                 <div class="product-slider-container" data-aos="fade-up">
-                    <button class="slider-nav prev" id="prevBtn">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-
                     <div class="product-slider-wrapper">
                         <div class="product-slider" id="productSlider">
                             @foreach($produkTersedia as $produk)
@@ -189,10 +185,6 @@
 
                                             <div class="product-specs">
                                                 <div class="spec-item">
-                                                    {{-- <i class="fa-solid fa-cubes"></i>
-                                                    <span>Stok: <strong>{{ $produk->stok }}</strong></span> --}}
-                                                </div>
-                                                <div class="spec-item">
                                                     <i class="fa-solid fa-tag"></i>
                                                     <span>{{ $produk->harga_formatted }} / hari</span>
                                                 </div>
@@ -206,14 +198,14 @@
                                             @endif
 
                                             <div class="product-actions">
-<a href="{{ route('transaksi.index', [
-    'produk_ids[]' => $produk->id,
-    'jumlahs[]' => 1,
-    'durasis[]' => 1
-]) }}" class="btn-wa">
-    <i class="fa-solid fa-cart-plus"></i>
-    Sewa
-</a>
+                                                <a href="{{ route('transaksi.index', [
+                                                    'produk_ids[]' => $produk->id,
+                                                    'jumlahs[]' => 1,
+                                                    'durasis[]' => 1
+                                                ]) }}" class="btn-wa">
+                                                    <i class="fa-solid fa-cart-plus"></i>
+                                                    Sewa
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -222,20 +214,19 @@
                         </div>
                     </div>
 
-                    <button class="slider-nav next" id="nextBtn">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-
-                    <div class="slider-dots" id="sliderDots">
-                        <!-- Dots akan diisi oleh JavaScript -->
+                    <!-- Scroll Indicator -->
+                    <div class="scroll-indicator">
+                        <span class="scroll-hint">
+                            <i class="fas fa-arrow-left"></i> Geser untuk melihat lebih banyak <i class="fas fa-arrow-right"></i>
+                        </span>
                     </div>
-                </div>
 
-                <div class="text-center mt-5" data-aos="fade-up">
-                    <a href="{{ route('produk.list') }}" class="btn-lihat-semua">
-                        Lihat Semua Produk
-                        <i class="fas fa-arrow-right ms-2"></i>
-                    </a>
+                    <div class="text-center mt-5" data-aos="fade-up">
+                        <a href="{{ route('produk.list') }}" class="btn-lihat-semua">
+                            Lihat Semua Produk
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
                 </div>
             @endif
         </div>

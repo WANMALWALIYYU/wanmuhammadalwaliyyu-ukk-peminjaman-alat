@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="assets/image/logo-mcr.png">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/image/logo-mcr.png') }}" />
     <title>MedikCareRent - @yield('pages')</title>
 
     <!-- BOOTSTRAP LINK -->
@@ -132,7 +132,6 @@
             penggunaSliders.forEach(selector => {
                 const slider = document.querySelector(selector);
                 if (slider) {
-                    // Hentikan animasi saat hover slider
                     slider.addEventListener('mouseenter', function() {
                         const penggunaBody = this.querySelector(selector === '.pengguna-slider' ?
                             '.pengguna-body' : '.pengguna-body-sec');
@@ -141,7 +140,6 @@
                         }
                     });
 
-                    // Lanjutkan animasi saat mouse keluar
                     slider.addEventListener('mouseleave', function() {
                         const penggunaBody = this.querySelector(selector === '.pengguna-slider' ?
                             '.pengguna-body' : '.pengguna-body-sec');
@@ -152,7 +150,6 @@
                 }
             });
 
-            // Kontrol animasi saat hover langsung ke item
             document.querySelectorAll('.move-img, .move-img-sec').forEach(item => {
                 item.addEventListener('mouseenter', function() {
                     const parentSlider = this.closest('.pengguna-slider, .pengguna-slider-sec');
@@ -177,158 +174,113 @@
                 });
             });
 
-            // Optimasi performa untuk animasi
             const sliders = document.querySelectorAll('.pengguna-body, .pengguna-body-sec');
             sliders.forEach(slider => {
                 slider.style.willChange = 'transform';
             });
 
             // ====================================
-            // PRODUCT SLIDER (4 KOLOM DENGAN ARROW)
+            // PRODUCT SLIDER (SCROLL HORIZONTAL - TIDAK MENGANGGU SCROLL VERTIKAL)
             // ====================================
+            const productSliderWrapper = document.querySelector('.product-slider-wrapper');
             const productSlider = document.getElementById('productSlider');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const dotsContainer = document.getElementById('sliderDots');
 
-            if (productSlider && prevBtn && nextBtn && dotsContainer) {
-                const slides = document.querySelectorAll('.product-slide');
-                const slidesCount = slides.length;
+            if (productSliderWrapper && productSlider) {
+                let isDragging = false;
+                let startX;
+                let scrollLeft;
+                let startScrollLeft;
+                let isHorizontalScroll = false;
+                let wheelTimeout;
 
-                if (slidesCount > 0) {
-                    let slidesPerView = getSlidesPerView();
-                    const maxIndex = Math.max(0, Math.ceil(slidesCount / slidesPerView) - 1);
-                    let currentIndex = 0;
-                    let isTransitioning = false;
+                // Enable horizontal scroll with mouse wheel - TIDAK MENGANGGU SCROLL VERTIKAL
+                productSliderWrapper.addEventListener('wheel', (e) => {
+                    // Deteksi arah scroll - bandingkan deltaX dan deltaY
+                    const deltaXAbs = Math.abs(e.deltaX);
+                    const deltaYAbs = Math.abs(e.deltaY);
 
-                    // Create dots
-                    dotsContainer.innerHTML = ''; // Kosongkan dots container
-                    for (let i = 0; i <= maxIndex; i++) {
-                        const dot = document.createElement('button');
-                        dot.classList.add('slider-dot');
-                        if (i === 0) dot.classList.add('active');
-                        dot.addEventListener('click', () => goToSlide(i));
-                        dotsContainer.appendChild(dot);
+                    // Jika scroll lebih horizontal (kiri/kanan) ATAU user menekan Shift
+                    if (deltaXAbs > deltaYAbs || e.shiftKey) {
+                        // Ini adalah scroll horizontal - lakukan horizontal scroll
+                        e.preventDefault();
+                        productSliderWrapper.scrollLeft += e.deltaY || e.deltaX;
+                        isHorizontalScroll = true;
+
+                        // Reset flag setelah selesai scroll
+                        clearTimeout(wheelTimeout);
+                        wheelTimeout = setTimeout(() => {
+                            isHorizontalScroll = false;
+                        }, 100);
                     }
+                    // Jika scroll vertikal (atas/bawah) - biarkan default
+                    // TIDAK ADA preventDefault() - halaman tetap bisa scroll ke atas/bawah
+                }, { passive: false });
 
-                    const dots = document.querySelectorAll('.slider-dot');
+                // Mouse drag to scroll
+                productSliderWrapper.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.pageX - productSliderWrapper.offsetLeft;
+                    scrollLeft = productSliderWrapper.scrollLeft;
+                    productSliderWrapper.style.cursor = 'grabbing';
+                });
 
-                    // Update buttons state
-                    function updateButtons() {
-                        if (prevBtn) prevBtn.disabled = currentIndex === 0;
-                        if (nextBtn) nextBtn.disabled = currentIndex === maxIndex;
+                productSliderWrapper.addEventListener('mouseleave', () => {
+                    isDragging = false;
+                    productSliderWrapper.style.cursor = 'grab';
+                });
 
-                        // Update dots
-                        dots.forEach((dot, index) => {
-                            if (index === currentIndex) {
-                                dot.classList.add('active');
-                            } else {
-                                dot.classList.remove('active');
-                            }
-                        });
+                productSliderWrapper.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    productSliderWrapper.style.cursor = 'grab';
+                });
+
+                productSliderWrapper.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                    const x = e.pageX - productSliderWrapper.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    productSliderWrapper.scrollLeft = scrollLeft - walk;
+                });
+
+                productSliderWrapper.style.cursor = 'grab';
+
+                // Touch events untuk mobile (agar scroll vertikal tetap berfungsi)
+                let touchStartX = 0;
+                let touchStartY = 0;
+                let touchScrollLeft = 0;
+                let isTouchDragging = false;
+
+                productSliderWrapper.addEventListener('touchstart', (e) => {
+                    touchStartX = e.touches[0].pageX - productSliderWrapper.offsetLeft;
+                    touchStartY = e.touches[0].pageY;
+                    touchScrollLeft = productSliderWrapper.scrollLeft;
+                    isTouchDragging = true;
+                }, { passive: true });
+
+                productSliderWrapper.addEventListener('touchmove', (e) => {
+                    if (!isTouchDragging) return;
+
+                    const touchX = e.touches[0].pageX - productSliderWrapper.offsetLeft;
+                    const touchY = e.touches[0].pageY;
+                    const deltaX = Math.abs(touchX - touchStartX);
+                    const deltaY = Math.abs(touchY - touchStartY);
+
+                    // Jika scroll lebih horizontal daripada vertikal, lakukan horizontal scroll
+                    if (deltaX > deltaY && deltaX > 10) {
+                        e.preventDefault();
+                        const walk = (touchX - touchStartX) * 1;
+                        productSliderWrapper.scrollLeft = touchScrollLeft - walk;
                     }
+                    // Jika scroll vertikal, biarkan default (tidak di-prevent)
+                }, { passive: false });
 
-                    // Go to specific slide
-                    function goToSlide(index) {
-                        if (isTransitioning || index < 0 || index > maxIndex) return;
-
-                        isTransitioning = true;
-                        currentIndex = index;
-
-                        const slideWidth = slides[0].offsetWidth + 20; // termasuk gap
-                        const translateX = -currentIndex * slideWidth * slidesPerView;
-
-                        productSlider.style.transform = `translateX(${translateX}px)`;
-                        updateButtons();
-
-                        setTimeout(() => {
-                            isTransitioning = false;
-                        }, 500);
-                    }
-
-                    // Get slides per view based on screen size
-                    function getSlidesPerView() {
-                        if (window.innerWidth <= 480) return 1;
-                        if (window.innerWidth <= 768) return 2;
-                        if (window.innerWidth <= 1200) return 3;
-                        return 4;
-                    }
-
-                    // Next slide
-                    function nextSlide() {
-                        if (currentIndex < maxIndex) {
-                            goToSlide(currentIndex + 1);
-                        }
-                    }
-
-                    // Previous slide
-                    function prevSlide() {
-                        if (currentIndex > 0) {
-                            goToSlide(currentIndex - 1);
-                        }
-                    }
-
-                    // Event listeners
-                    prevBtn.addEventListener('click', prevSlide);
-                    nextBtn.addEventListener('click', nextSlide);
-
-                    // Handle resize
-                    let resizeTimer;
-                    window.addEventListener('resize', function() {
-                        clearTimeout(resizeTimer);
-                        resizeTimer = setTimeout(function() {
-                            const newSlidesPerView = getSlidesPerView();
-                            if (newSlidesPerView !== slidesPerView) {
-                                slidesPerView = newSlidesPerView;
-                                // Recalculate maxIndex
-                                const newMaxIndex = Math.max(0, Math.ceil(slidesCount / slidesPerView) - 1);
-                                if (newMaxIndex !== maxIndex) {
-                                    location.reload(); // Refresh jika layout berubah drastis
-                                } else {
-                                    // Reset posisi jika perlu
-                                    if (currentIndex > newMaxIndex) {
-                                        goToSlide(newMaxIndex);
-                                    }
-                                }
-                            }
-                        }, 250);
-                    });
-
-                    // Touch events for mobile
-                    let touchStartX = 0;
-                    let touchEndX = 0;
-
-                    productSlider.addEventListener('touchstart', (e) => {
-                        touchStartX = e.changedTouches[0].screenX;
-                    }, { passive: true });
-
-                    productSlider.addEventListener('touchend', (e) => {
-                        touchEndX = e.changedTouches[0].screenX;
-                        handleSwipe();
-                    }, { passive: true });
-
-                    function handleSwipe() {
-                        const swipeThreshold = 50;
-                        const diff = touchStartX - touchEndX;
-
-                        if (Math.abs(diff) > swipeThreshold) {
-                            if (diff > 0 && currentIndex < maxIndex) {
-                                // Swipe left
-                                nextSlide();
-                            } else if (diff < 0 && currentIndex > 0) {
-                                // Swipe right
-                                prevSlide();
-                            }
-                        }
-                    }
-
-                    // Initial update
-                    updateButtons();
-                }
+                productSliderWrapper.addEventListener('touchend', () => {
+                    isTouchDragging = false;
+                });
             }
 
             // ====================================
-            // APPLE-STYLE ACCORDION
+            // APPLE-STYLE ACCORDION - SEMUA TERTUTUP AWALNYA
             // ====================================
             const accordionButtons = document.querySelectorAll('.accordion-button');
             const featureVisualContainer = document.getElementById('featureVisual');
@@ -376,26 +328,37 @@
                 }
             };
 
+            // TUTUP SEMUA ACCORDION AWALNYA
+            if (accordionButtons.length > 0) {
+                // Pastikan semua collapse tidak terbuka
+                const allCollapses = document.querySelectorAll('.accordion-collapse');
+                allCollapses.forEach(collapse => {
+                    collapse.classList.remove('show');
+                });
+
+                // Pastikan semua button memiliki class 'collapsed'
+                accordionButtons.forEach(button => {
+                    button.classList.add('collapsed');
+                    button.setAttribute('aria-expanded', 'false');
+                });
+            }
+
             if (accordionButtons.length > 0 && featureVisualContainer) {
-                // Fungsi untuk animasi fade-up Apple-style
                 function appleFadeUpAnimation(element) {
                     element.style.animation = 'none';
-                    element.offsetHeight; // Trigger reflow
+                    element.offsetHeight;
                     element.style.animation = 'appleFadeInVisual 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards';
                 }
 
-                // Event listener untuk setiap accordion button
                 accordionButtons.forEach(button => {
                     button.addEventListener('click', function() {
                         const accordionItem = this.closest('.accordion-item');
                         const visualType = accordionItem.getAttribute('data-visual');
 
                         if (visualData[visualType]) {
-                            // Tambah efek transisi Apple-style
                             featureVisualContainer.classList.add('changing');
                             appleFadeUpAnimation(featureVisualContainer);
 
-                            // Animasi smooth untuk perubahan konten
                             setTimeout(() => {
                                 if (featureImage) {
                                     featureImage.style.opacity = '0';
@@ -408,7 +371,6 @@
                                         featureImage.alt = visualData[visualType].title;
                                     }
 
-                                    // Update overlay dengan animasi
                                     if (visualOverlay) {
                                         visualOverlay.style.opacity = '0';
                                         visualOverlay.style.transform = 'translateY(5px)';
@@ -434,7 +396,6 @@
                                                 `<i class="${visualData[visualType].icon}"></i> ${visualData[visualType].indicator}`;
                                         }
 
-                                        // Animasikan kembali ke normal
                                         if (featureImage) {
                                             featureImage.style.opacity = '1';
                                             featureImage.style.transform = 'translateY(0)';
@@ -450,7 +411,6 @@
                                             visualDescription.style.transform = 'translateY(0)';
                                         }
 
-                                        // Hapus efek transisi setelah selesai
                                         setTimeout(() => {
                                             featureVisualContainer.classList.remove('changing');
                                         }, 500);
@@ -459,17 +419,16 @@
                             }, 100);
                         }
 
-                        // Aktifkan container visual
                         if (!featureVisualContainer.classList.contains('active')) {
                             featureVisualContainer.classList.add('active');
                         }
                     });
                 });
 
-                // Set visual awal berdasarkan accordion pertama
-                const firstActiveItem = document.querySelector('.accordion-item[data-visual]');
-                if (firstActiveItem) {
-                    const firstVisualType = firstActiveItem.getAttribute('data-visual');
+                // Set visual awal berdasarkan accordion pertama (tapi jangan buka accordionnya)
+                const firstItem = document.querySelector('.accordion-item[data-visual]');
+                if (firstItem) {
+                    const firstVisualType = firstItem.getAttribute('data-visual');
                     if (visualData[firstVisualType]) {
                         if (featureImage) {
                             featureImage.src = visualData[firstVisualType].image;
@@ -494,51 +453,7 @@
                     }
                 }
 
-                // Bootstrap accordion event listener
-                const featureAccordion = document.getElementById('featureAccordion');
-                if (featureAccordion) {
-                    featureAccordion.addEventListener('show.bs.collapse', function(event) {
-                        const targetId = event.target.id;
-                        const accordionItem = document.querySelector(`[data-bs-target="#${targetId}"]`)?.closest('.accordion-item');
-
-                        if (accordionItem) {
-                            const visualType = accordionItem.getAttribute('data-visual');
-
-                            if (visualData[visualType]) {
-                                featureVisualContainer.classList.add('changing');
-                                appleFadeUpAnimation(featureVisualContainer);
-
-                                setTimeout(() => {
-                                    if (featureImage) {
-                                        featureImage.src = visualData[visualType].image;
-                                        featureImage.alt = visualData[visualType].title;
-                                    }
-
-                                    if (visualOverlay) {
-                                        visualOverlay.innerHTML =
-                                            `<i class="${visualData[visualType].icon}"></i> ${visualData[visualType].title}`;
-                                    }
-
-                                    if (visualDescription) {
-                                        visualDescription.textContent = visualData[visualType].description;
-                                    }
-
-                                    if (visualIndicator) {
-                                        visualIndicator.innerHTML =
-                                            `<i class="${visualData[visualType].icon}"></i> ${visualData[visualType].indicator}`;
-                                    }
-
-                                    setTimeout(() => {
-                                        featureVisualContainer.classList.remove('changing');
-                                    }, 500);
-                                }, 200);
-                            }
-                        }
-                    });
-                }
-
-                // Tambah efek hover pada accordion items
-                const accordionItems = document.querySelectorAll('.accordion-item');
+                accordionItems = document.querySelectorAll('.accordion-item');
                 accordionItems.forEach(item => {
                     item.addEventListener('mouseenter', function() {
                         this.style.transition = 'transform 0.3s ease';

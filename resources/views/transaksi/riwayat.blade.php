@@ -1021,7 +1021,7 @@
                         {{ $transaksi->nama_lengkap }}
                     </div>
                 </div>
-                <div class="status-badge status-{{ $transaksi->status }}">
+                {{-- <div class="status-badge status-{{ $transaksi->status && $transaksi->pengembalian }}">
                     @php
                         $statusIcon = [
                             'menunggu_persetujuan' => 'fa-clock',
@@ -1046,6 +1046,72 @@
                     @endphp
                     <i class="fas {{ $statusIcon[$transaksi->status] ?? 'fa-info-circle' }}"></i>
                     {{ $statusText[$transaksi->status] ?? ucfirst(str_replace('_', ' ', $transaksi->status)) }}
+                </div> --}}
+                {{-- STATUS BADGE --}}
+                @php
+                    // Tentukan status yang akan ditampilkan
+                    $displayStatus = $transaksi->status;
+                    $badgeClass = '';
+
+                    // Jika transaksi dalam proses pengembalian (status dikembalikan atau selesai)
+                    if (in_array($transaksi->status, ['dikembalikan', 'selesai']) && $transaksi->pengembalian) {
+                        // Gunakan status dari pengembalian untuk detail yang lebih akurat
+                        $displayStatus = $transaksi->pengembalian->status;
+                    }
+
+                    // Mapping status ke class CSS
+                    $badgeClassMap = [
+                        'menunggu_persetujuan' => 'status-menunggu_persetujuan',
+                        'disetujui' => 'status-disetujui',
+                        'ditolak' => 'status-ditolak',
+                        'dikirim' => 'status-dikirim',
+                        'dipinjam' => 'status-dipinjam',
+                        'dikembalikan' => 'status-dikembalikan',
+                        'selesai' => 'status-selesai',
+                        'dibatalkan' => 'status-dibatalkan',
+                        // Status dari pengembalian
+                        'menunggu_pengiriman' => 'status-menunggu_persetujuan',
+                        'sampai' => 'status-disetujui',
+                        'diproses' => 'status-dipinjam',
+                    ];
+
+                    $badgeClass = $badgeClassMap[$displayStatus] ?? 'status-menunggu_persetujuan';
+
+                    // Mapping icon dan teks
+                    $statusIconMap = [
+                        'menunggu_persetujuan' => 'fa-clock',
+                        'disetujui' => 'fa-check-circle',
+                        'ditolak' => 'fa-ban',
+                        'dikirim' => 'fa-truck',
+                        'dipinjam' => 'fa-hand-holding-medical',
+                        'dikembalikan' => 'fa-undo-alt',
+                        'selesai' => 'fa-check-double',
+                        'dibatalkan' => 'fa-times-circle',
+                        // Status dari pengembalian
+                        'menunggu_pengiriman' => 'fa-clock',
+                        'sampai' => 'fa-box-open',
+                        'diproses' => 'fa-clipboard-list',
+                    ];
+
+                    $statusTextMap = [
+                        'menunggu_persetujuan' => 'Menunggu Persetujuan',
+                        'disetujui' => 'Disetujui Petugas',
+                        'ditolak' => 'Ditolak',
+                        'dikirim' => 'Dikirim',
+                        'dipinjam' => 'Sedang Dipinjam',
+                        'dikembalikan' => 'Dikembalikan',
+                        'selesai' => 'Selesai',
+                        'dibatalkan' => 'Dibatalkan',
+                        // Status dari pengembalian
+                        'menunggu_pengiriman' => 'Menunggu Pengiriman',
+                        'sampai' => 'Barang Sampai ke Petugas',
+                        'diproses' => 'Sedang Diproses Petugas',
+                    ];
+                @endphp
+
+                <div class="status-badge {{ $badgeClass }}">
+                    <i class="fas {{ $statusIconMap[$displayStatus] ?? 'fa-info-circle' }}"></i>
+                    {{ $statusTextMap[$displayStatus] ?? ucfirst(str_replace('_', ' ', $displayStatus)) }}
                 </div>
             </div>
 
@@ -1163,7 +1229,7 @@
                         </span>
                     @endif
                 </div>
-                <div class="action-buttons">
+                {{-- <div class="action-buttons">
                     @if($transaksi->status === 'dikirim')
                         <a href="{{ route('user.konfirmasi-penerimaan', $transaksi->id) }}"
                         class="btn-action btn-detail" style="background: #10b981; color: white;">
@@ -1189,7 +1255,14 @@
                         @endif
                     @endif
 
-                    @if($transaksi->status == 'dikembalikan')
+                     @if($transaksi->status === 'dikembalikan')
+                        <a href="{{ route('user.pengembalian.show', $transaksi->id) }}"
+                        class="btn-action btn-detail" style="background: #1032b9; color: white;">
+                            <i class="fas fa-check-circle me-1"></i> Lacak Pengembalian
+                        </a>
+                    @endif
+
+                    @if($transaksi->status == 'dikembalikan' && $transaksi->pengembalian)
                         @php
                             $subtotal = $transaksi->detailTransaksis->sum('subtotal');
                             $deposit = $transaksi->jumlah_deposit;
@@ -1197,16 +1270,21 @@
                             $denda = $transaksi->pengembalian?->total_biaya_tambahan ?? 0;
                             $totalBayar = $sisa + $denda;
                         @endphp
-                        @if($totalBayar > 0)
+
+                        @if($transaksi->pengembalian->status == 'selesai' && $totalBayar > 0)
                             <a href="{{ route('user.payment.create', $transaksi->id) }}"
                             class="btn-action" style="background: #10b981; color: white;">
                                 <i class="fas fa-credit-card me-1"></i>
                                 Bayar Pelunasan
                                 <small class="ms-1">(Rp {{ number_format($totalBayar, 0, ',', '.') }})</small>
                             </a>
-                        @else
+                        @elseif($transaksi->pengembalian->status == 'selesai' && $totalBayar <= 0)
                             <span class="btn-action" style="background: #10b981; color: white; cursor: default;">
                                 <i class="fas fa-check-circle me-1"></i> Lunas
+                            </span>
+                        @elseif(in_array($transaksi->pengembalian->status, ['dikirim', 'sampai', 'diproses']))
+                            <span class="btn-action" style="background: #f59e0b; color: white; cursor: default;">
+                                <i class="fas fa-spinner fa-spin me-1"></i> Menunggu Pemeriksaan Petugas
                             </span>
                         @endif
                     @endif
@@ -1229,8 +1307,112 @@
 
                     @if(in_array($transaksi->status, ['disetujui', 'dikirim', 'dipinjam']))
                     <button class="btn-action btn-track" onclick="trackTransaction('{{ $transaksi->kode_transaksi }}', '{{ $transaksi->status }}')">
-                        <i class="fas fa-map-marker-alt"></i> Lacak
+                        <i class="fas fa-map-marker-alt"></i> Status
                     </button>
+                    @endif
+                </div> --}}
+                {{-- ACTION BUTTONS --}}
+                <div class="action-buttons">
+                    {{-- KONFIRMASI TERIMA --}}
+                    @if($transaksi->status === 'dikirim')
+                        <a href="{{ route('user.konfirmasi-penerimaan', $transaksi->id) }}"
+                        class="btn-action btn-detail" style="background: #10b981; color: white;">
+                            <i class="fas fa-check-circle me-1"></i> Konfirmasi Terima
+                        </a>
+                    @endif
+
+                    {{-- PROSES PENGEMBALIAN (SAAT STATUS DIPINJAM) --}}
+                    @if($transaksi->status === 'dipinjam')
+                        @php
+                            $hasReturn = $transaksi->pengembalian && !in_array($transaksi->pengembalian->status, ['selesai', 'dibatalkan']);
+                        @endphp
+
+                        @if(!$hasReturn)
+                            <a href="{{ route('user.pengembalian.create', $transaksi->id) }}"
+                            class="btn-action" style="background: #f59e0b; color: white;">
+                                <i class="fas fa-undo-alt me-1"></i> Buat Proses Pengembalian
+                            </a>
+                        @else
+                            {{-- TAMPILKAN LACAK PENGEMBALIAN HANYA JIKA STATUS BELUM SELESAI --}}
+                            @if($transaksi->pengembalian->status != 'selesai')
+                                <a href="{{ route('user.pengembalian.show', $transaksi->pengembalian->id) }}"
+                                class="btn-action" style="background: #143463; color: white;">
+                                    <i class="fas fa-truck me-1"></i> Lacak Pengembalian
+                                </a>
+                            @endif
+                        @endif
+                    @endif
+
+                    {{-- LACAK PENGEMBALIAN (SAAT STATUS DIKEMBALIKAN) --}}
+                    @if($transaksi->status === 'dikembalikan')
+                        @php
+                            $returnStatus = $transaksi->pengembalian->status ?? null;
+                        @endphp
+                        {{-- TAMPILKAN LACAK PENGEMBALIAN HANYA JIKA STATUS BELUM SELESAI --}}
+                        @if($returnStatus && $returnStatus != 'selesai')
+                            <a href="{{ route('user.pengembalian.show', $transaksi->pengembalian->id ?? $transaksi->id) }}"
+                            class="btn-action" style="background: #143463; color: white;">
+                                <i class="fas fa-truck me-1"></i> Lacak Pengembalian
+                            </a>
+                        @endif
+                    @endif
+
+                    {{-- PEMBAYARAN PELUNASAN --}}
+                    @if($transaksi->status == 'dikembalikan' && $transaksi->pengembalian)
+                        @php
+                            $subtotal = $transaksi->detailTransaksis->sum('subtotal');
+                            $deposit = $transaksi->jumlah_deposit;
+                            $sisa = $subtotal - $deposit;
+                            $denda = $transaksi->pengembalian->total_biaya_tambahan ?? 0;
+                            $totalBayar = $sisa + $denda;
+                            $returnStatus = $transaksi->pengembalian->status;
+                        @endphp
+
+                        {{-- BUTTON BAYAR PELUNASAN MUNCUL SAAT STATUS PENGEMBALIAN ADALAH SELESAI --}}
+                        @if($returnStatus == 'selesai')
+                            @if($totalBayar > 0)
+                                <a href="{{ route('user.payment.create', $transaksi->id) }}"
+                                class="btn-action" style="background: #10b981; color: white;">
+                                    <i class="fas fa-credit-card me-1"></i>
+                                    Bayar Pelunasan
+                                    <small class="ms-1">(Rp {{ number_format($totalBayar, 0, ',', '.') }})</small>
+                                </a>
+                            @else
+                                <span class="btn-action" style="background: #10b981; color: white; cursor: default;">
+                                    <i class="fas fa-check-circle me-1"></i> Lunas
+                                </span>
+                            @endif
+                        @elseif(in_array($returnStatus, ['dikirim', 'sampai', 'diproses']))
+                            <span class="btn-action" style="background: #f59e0b; color: white; cursor: default;">
+                                <i class="fas fa-spinner fa-spin me-1"></i> Menunggu Pemeriksaan Petugas
+                            </span>
+                        @endif
+                    @endif
+
+                    {{-- DETAIL TRANSAKSI --}}
+                    <a href="{{ route('transaksi.show', $transaksi->id) }}" class="btn-action btn-detail">
+                        <i class="fas fa-eye"></i> Detail
+                    </a>
+
+                    {{-- BATALKAN TRANSAKSI --}}
+                    @if($transaksi->status == 'menunggu_persetujuan')
+                        <button onclick="cancelTransaction({{ $transaksi->id }})" class="btn-action btn-cancel">
+                            <i class="fas fa-times"></i> Batalkan
+                        </button>
+                    @endif
+
+                    {{-- AJUKAN ULANG --}}
+                    @if($transaksi->status == 'ditolak')
+                        <a href="{{ route('transaksi.reapply', $transaksi->id) }}" class="btn-action btn-reapply">
+                            <i class="fas fa-redo-alt"></i> Ajukan Ulang
+                        </a>
+                    @endif
+
+                    {{-- LACAK STATUS TRANSAKSI (TIDAK TERMASUK YANG SUDAH SELESAI) --}}
+                    @if(in_array($transaksi->status, ['disetujui', 'dikirim', 'dipinjam']))
+                        <button class="btn-action btn-track" onclick="trackTransaction('{{ $transaksi->kode_transaksi }}', '{{ $transaksi->status }}')">
+                            <i class="fas fa-map-marker-alt"></i> Status
+                        </button>
                     @endif
                 </div>
             </div>

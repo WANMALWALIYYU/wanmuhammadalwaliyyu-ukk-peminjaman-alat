@@ -1,4 +1,5 @@
 <?php
+// app/Http/Controllers/User/PengembalianController.php
 
 namespace App\Http\Controllers\User;
 
@@ -27,10 +28,10 @@ class PengembalianController extends Controller
 
         // Check if return already exists
         if ($transaksi->pengembalian && in_array($transaksi->pengembalian->status, [
-            Pengembalian::STATUS_MENUNGGU_PENGIRIMAN,
             Pengembalian::STATUS_DIKIRIM,
             Pengembalian::STATUS_SAMPAI,
-            Pengembalian::STATUS_DIPROSES
+            Pengembalian::STATUS_DIPROSES,
+            Pengembalian::STATUS_SELESAI
         ])) {
             return redirect()->route('user.pengembalian.show', $transaksi->pengembalian->id)
                 ->with('info', 'Proses pengembalian sudah dimulai. Silakan cek status.');
@@ -52,15 +53,15 @@ class PengembalianController extends Controller
     }
 
     /**
-     * Store return request
+     * Store return request - status langsung DIKIRIM
      */
     public function store(Request $request, $id)
     {
         $request->validate([
             'foto_barang_dikembalikan' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'catatan_user' => 'nullable|string|max:500',
-            'no_resi' => 'nullable|string|max:50',
-            'kurir' => 'nullable|string|max:100',
+            'no_resi' => 'required|string|max:50',
+            'kurir' => 'required|string|max:100',
         ]);
 
         $transaksi = Transaksi::where('user_id', Auth::id())
@@ -78,22 +79,20 @@ class PengembalianController extends Controller
                 $fotoPath = $file->storeAs('pengembalian/user', $namaFile, 'public');
             }
 
-            // Create pengembalian record
+            // Create pengembalian record with status DIKIRIM
             $pengembalian = Pengembalian::create([
                 'transaksi_id' => $transaksi->id,
                 'user_id' => Auth::id(),
-                'status' => $request->filled('no_resi') ? Pengembalian::STATUS_DIKIRIM : Pengembalian::STATUS_MENUNGGU_PENGIRIMAN,
+                'status' => Pengembalian::STATUS_DIKIRIM,
                 'no_resi_pengembalian' => $request->no_resi,
                 'kurir_pengembalian' => $request->kurir,
                 'foto_barang_dikembalikan' => $fotoPath,
                 'catatan_user' => $request->catatan_user,
-                'tanggal_dikirim' => $request->filled('no_resi') ? now() : null,
+                'tanggal_dikirim' => now(),
             ]);
 
-            // If user already has shipping info, update transaksi status
-            if ($request->filled('no_resi')) {
-                $transaksi->update(['status' => Transaksi::STATUS_DIKEMBALIKAN]);
-            }
+            // Update transaksi status to DIKEMBALIKAN
+            $transaksi->update(['status' => Transaksi::STATUS_DIKEMBALIKAN]);
 
             // Log activity
             $this->logActivity(
@@ -106,12 +105,8 @@ class PengembalianController extends Controller
 
             DB::commit();
 
-            $message = $request->filled('no_resi')
-                ? 'Pengembalian berhasil dikirim. Silakan tunggu konfirmasi dari petugas.'
-                : 'Permintaan pengembalian berhasil. Silakan kirim barang dan update resi pengiriman.';
-
             return redirect()->route('user.pengembalian.show', $pengembalian->id)
-                ->with('success', $message);
+                ->with('success', 'Pengembalian berhasil dikirim. Silakan tunggu konfirmasi dari petugas.');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -127,7 +122,7 @@ class PengembalianController extends Controller
     }
 
     /**
-     * Update shipping info (resi)
+     * Update shipping info (resi) - Untuk update resi jika diperlukan
      */
     public function updateShipping(Request $request, $id)
     {

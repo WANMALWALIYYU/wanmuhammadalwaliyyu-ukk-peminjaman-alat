@@ -310,10 +310,10 @@
             <div class="action-buttons-modern" data-aos="fade-up" data-aos-delay="350">
                 @if($transaksi->status == 'menunggu_persetujuan')
                 <button onclick="showApproveModal({{ $transaksi->id }})" class="btn btn-success w-100 mb-2">
-                    <i class="fas fa-check-circle me-2"></i> Setujui Transaksi
+                    <i class="fas fa-check-circle me-2"></i> Setujui Peminjaman
                 </button>
                 <button onclick="showRejectModal({{ $transaksi->id }})" class="btn btn-danger w-100">
-                    <i class="fas fa-times-circle me-2"></i> Tolak Transaksi
+                    <i class="fas fa-times-circle me-2"></i> Tolak Peminjaman
                 </button>
                 @endif
 
@@ -364,7 +364,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title fw-bold">
                         <i class="fas fa-check-circle text-success me-2"></i>
-                        Setujui Transaksi
+                        Setujui Pengajuan Peminjaman
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -377,7 +377,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Setujui Transaksi</button>
+                    <button type="submit" class="btn btn-success">Setujui</button>
                 </div>
             </form>
         </div>
@@ -393,7 +393,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title fw-bold">
                         <i class="fas fa-times-circle text-danger me-2"></i>
-                        Tolak Transaksi
+                        Tolak Pengajuan Peminjaman
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -407,7 +407,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger">Tolak Transaksi</button>
+                    <button type="submit" class="btn btn-danger">Tolak</button>
                 </div>
             </form>
         </div>

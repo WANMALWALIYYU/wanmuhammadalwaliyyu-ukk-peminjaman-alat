@@ -46,7 +46,7 @@ return new class extends Migration
                 'dikirim', // dalam pengiriman
                 'dipinjam', // sedang dipinjam
                 'dikembalikan', // sudah dikembalikan, menunggu pengecekan
-                'selesai', // transaksi selesai (sudah pelunasan)
+                'selesai', // transaksi selesai 
                 'dibatalkan'
             ])->default('menunggu_persetujuan');
 

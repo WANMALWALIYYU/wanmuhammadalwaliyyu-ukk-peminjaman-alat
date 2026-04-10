@@ -238,8 +238,8 @@
                                         <li>Barang akan dikirim ke alamat MedikCareRent</li>
                                         <li>Petugas akan melakukan pemeriksaan barang</li>
                                         <li>Jika ada kerusakan, akan ditambahkan biaya perbaikan</li>
+                                        <li>Setelah petugas melakukan pemeriksaan, proses pengembalian selesai</li>
                                         <li>Anda akan diminta melakukan pembayaran sisa tagihan + biaya tambahan</li>
-                                        <li>Setelah pembayaran lunas, proses pengembalian selesai</li>
                                     </ol>
                                 </div>
                             </div>

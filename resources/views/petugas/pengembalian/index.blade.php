@@ -19,15 +19,6 @@
     <!-- Stats Cards -->
     <div class="stats-row mb-4">
         <div class="stat-card">
-            <div class="stat-icon bg-warning">
-                <i class="fas fa-clock"></i>
-            </div>
-            <div class="stat-info">
-                <h3>{{ $stats['menunggu_pengiriman'] ?? 0 }}</h3>
-                <p>Menunggu Pengiriman</p>
-            </div>
-        </div>
-        <div class="stat-card">
             <div class="stat-icon bg-info">
                 <i class="fas fa-truck"></i>
             </div>
@@ -51,7 +42,7 @@
             </div>
             <div class="stat-info">
                 <h3>{{ $stats['diproses'] ?? 0 }}</h3>
-                <p>Sedang Diproses</p>
+                <p>Diproses</p>
             </div>
         </div>
     </div>
@@ -63,10 +54,9 @@
                 <label class="form-label">Status</label>
                 <select name="status" class="form-select">
                     <option value="">Semua Status</option>
-                    <option value="menunggu_pengiriman" {{ request('status') == 'menunggu_pengiriman' ? 'selected' : '' }}>Menunggu Pengiriman</option>
-                    <option value="dikirim" {{ request('status') == 'dikirim' ? 'selected' : '' }}>Dalam Pengiriman</option>
-                    <option value="sampai" {{ request('status') == 'sampai' ? 'selected' : '' }}>Barang Sampai</option>
-                    <option value="diproses" {{ request('status') == 'diproses' ? 'selected' : '' }}>Sedang Diproses</option>
+                    <option value="dikirim" {{ request('status') == 'dikirim' ? 'selected' : '' }}>Dikirim</option>
+                    <option value="sampai" {{ request('status') == 'sampai' ? 'selected' : '' }}>Sampai</option>
+                    <option value="diproses" {{ request('status') == 'diproses' ? 'selected' : '' }}>Diproses</option>
                     <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
                 </select>
             </div>
@@ -124,9 +114,39 @@
                         <td>{!! $pengembalian->status_badge !!}</td>
                         <td>
                             <a href="{{ route('petugas.pengembalian.show', $pengembalian->id) }}"
-                               class="btn btn-sm btn-primary">
-                                <i class="fas fa-eye"></i> Detail
+                               class="btn">
+                                <i class="fas fa-eye"></i>
                             </a>
+
+                            {{-- TOMBOL TERIMA --}}
+                            @if($pengembalian->status == 'dikirim')
+                            <form action="{{ route('petugas.pengembalian.show', $pengembalian->id) }}" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-check-double"></i> Terima
+                                </button>
+                            </form>
+                            @endif
+                            {{-- TOMBOL PERIKSA --}}
+                            @if($pengembalian->status == 'sampai')
+                            <form action="{{ route('petugas.pengembalian.pemeriksaan', $pengembalian->id) }}" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-check-double"></i> Periksa
+                                </button>
+                            </form>
+                            @endif
+                            {{-- TOMBOL SELESAI --}}
+                            @if($pengembalian->status == 'diproses')
+                            <form action="{{ route('petugas.pengembalian.complete', $pengembalian->id) }}"
+                                  method="POST" class="d-inline"
+                                  onsubmit="return confirm('Yakin ingin menyelesaikan proses pengembalian? Pastikan sudah memeriksa barang pengembalian.')">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fas fa-check-double"></i> Selesai
+                                </button>
+                            </form>
+                            @endif
                         </td>
                     </tr>
                     @empty
@@ -161,7 +181,7 @@
 }
 .stats-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-bottom: 1.5rem;
 }
@@ -184,7 +204,6 @@
     font-size: 1.8rem;
     color: white;
 }
-.stat-icon.bg-warning { background: #f59e0b; }
 .stat-icon.bg-info { background: #0ea5e9; }
 .stat-icon.bg-primary { background: #0b2c5d; }
 .stat-icon.bg-secondary { background: #64748b; }

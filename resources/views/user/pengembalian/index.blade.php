@@ -1,4 +1,3 @@
-{{-- resources/views/user/pengembalian/index.blade.php --}}
 @extends('index')
 
 @section('pages', 'Riwayat Pengembalian')

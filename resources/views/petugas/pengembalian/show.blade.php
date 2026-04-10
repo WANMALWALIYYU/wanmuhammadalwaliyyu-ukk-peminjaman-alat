@@ -107,7 +107,7 @@
                     @endif
                     @if($pengembalian->foto_barang_setelah_sampai)
                     <div class="col-6">
-                        <label class="form-label fw-semibold">Foto Setelah Sampai</label>
+                        <label class="form-label fw-semibold">Foto Barang Sampai</label>
                         <img src="{{ asset('storage/' . $pengembalian->foto_barang_setelah_sampai) }}"
                              class="img-fluid rounded-3" style="cursor: pointer;"
                              onclick="window.open(this.src)">
@@ -120,10 +120,10 @@
             <div class="info-card mt-3">
                 @if($pengembalian->status == 'dikirim')
                 <form action="{{ route('petugas.pengembalian.mark-sampai', $pengembalian->id) }}"
-                      method="POST" enctype="multipart/form-data" id="formSampai">
+                    method="POST" enctype="multipart/form-data" id="formSampai">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Foto Barang Setelah Sampai <span class="text-danger">*</span></label>
+                        <label class="form-label fw-semibold">Foto Barang Sampai <span class="text-danger">*</span></label>
                         <input type="file" name="foto_barang_setelah_sampai" class="form-control" accept="image/*" required>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">
@@ -134,9 +134,21 @@
 
                 @if($pengembalian->status == 'sampai')
                 <a href="{{ route('petugas.pengembalian.pemeriksaan', $pengembalian->id) }}"
-                   class="btn btn-warning w-100">
+                class="btn btn-warning w-100">
                     <i class="fas fa-clipboard-list me-1"></i> Proses Pemeriksaan
                 </a>
+                @endif
+
+                {{-- TOMBOL SELESAI UNTUK STATUS DIPROSES --}}
+                @if($pengembalian->status == 'diproses')
+                <form action="{{ route('petugas.pengembalian.complete', $pengembalian->id) }}"
+                    method="POST" id="formComplete">
+                    @csrf
+                    <button type="submit" class="btn btn-success w-100"
+                            onclick="return confirm('Yakin ingin menyelesaikan proses pengembalian? Pastikan sudah melakukan pemeriksaan barang pengembalian.')">
+                        <i class="fas fa-check-double me-1"></i> Selesaikan Pengembalian
+                    </button>
+                </form>
                 @endif
 
                 <a href="{{ route('petugas.pengembalian.index') }}" class="btn btn-secondary w-100 mt-2">

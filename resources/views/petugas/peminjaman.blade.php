@@ -108,7 +108,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title fw-bold">
                         <i class="fas fa-check-circle text-success me-2"></i>
-                        Setujui Transaksi
+                        Setujui Pengajuan Peminjaman
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -121,7 +121,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Setujui Transaksi</button>
+                    <button type="submit" class="btn btn-success">Setujui</button>
                 </div>
             </form>
         </div>
@@ -137,7 +137,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title fw-bold">
                         <i class="fas fa-times-circle text-danger me-2"></i>
-                        Tolak Transaksi
+                        Tolak Pengajuan Peminjaman
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
@@ -151,7 +151,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger">Tolak Transaksi</button>
+                    <button type="submit" class="btn btn-danger">Tolak</button>
                 </div>
             </form>
         </div>
@@ -638,46 +638,23 @@ function renderTable(transaksis) {
                 <td data-label="Status">${transaksi.status_badge}</td>
                 <td data-label="Aksi">
                     <div class="d-flex flex-column gap-1">
-                        <a href="{{ url('petugas/transaksi/${transaksi.id}') }}" class="btn btn-sm btn-outline-primary btn-modern-peminjaman w-100">
-                            <i class="fas fa-eye me-1"></i> Detail
-                        </a>
-                        ${transaksi.status === 'menunggu_persetujuan' ? `
-                            <button onclick="showApproveModal(${transaksi.id})" class="btn btn-sm btn-success btn-modern-peminjaman w-100">
-                                <i class="fas fa-check me-1"></i> Setujui
-                            </button>
-                            <button onclick="showRejectModal(${transaksi.id})" class="btn btn-sm btn-danger btn-modern-peminjaman w-100">
-                                <i class="fas fa-times me-1"></i> Tolak
-                            </button>
-                        ` : ''}
+                        <div class="d-flex gap-1">
+                            <a href="{{ url('petugas/transaksi/${transaksi.id}') }}" class="btn btn-sm text-dark btn-modern-peminjaman w-100" title="Detail peminjaman">
+                            <i class="fas fa-eye me-1"></i>
+                            </a>
+                            ${transaksi.status === 'menunggu_persetujuan' ? `
+                                <button onclick="showApproveModal(${transaksi.id})" class="btn btn-sm btn-success btn-modern-peminjaman w-100" title="Setujui pengajuan peminjaman">
+                                    <i class="fas fa-check me-1"></i>
+                                </button>
+                                <button onclick="showRejectModal(${transaksi.id})" class="btn btn-sm btn-danger btn-modern-peminjaman w-100" title="Tolak pengajuan peminjaman">
+                                    <i class="fas fa-times me-1"></i>
+                                </button>
+                            ` : ''}
+                        </div>
                         ${transaksi.status === 'disetujui' ? `
-                            <a href="/petugas/pengiriman/create/${transaksi.id}" class="btn btn-sm btn-info btn-modern-peminjaman w-100 mb-1">
+                            <a href="/petugas/pengiriman/create/${transaksi.id}" class="btn btn-sm btn-info btn-modern-peminjaman w-100 mb-1" title="Buat pengiriman ke peminjam">
                                 <i class="fas fa-truck me-1"></i> Buat Pengiriman
                             </a>
-                        ` : ''}
-                        ${transaksi.status === 'dikirim' ? `
-                            <form action="/petugas/transaksi/${transaksi.id}/update-pengiriman" method="POST" class="w-100" onsubmit="showButtonLoading(this)">
-                                @csrf
-                                <input type="hidden" name="status" value="dipinjam">
-                                <button type="submit" class="btn btn-sm btn-warning btn-modern-peminjaman w-100">
-                                    <i class="fas fa-hand-holding me-1"></i> Pinjam
-                                </button>
-                            </form>
-                        ` : ''}
-                        ${transaksi.status === 'dipinjam' ? `
-                            <form action="/petugas/transaksi/${transaksi.id}/mark-dikembalikan" method="POST" class="w-100" onsubmit="showButtonLoading(this)">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-secondary btn-modern-peminjaman w-100">
-                                    <i class="fas fa-undo-alt me-1"></i> Dikembalikan
-                                </button>
-                            </form>
-                        ` : ''}
-                        ${transaksi.status === 'dikembalikan' ? `
-                            <form action="/petugas/transaksi/${transaksi.id}/complete" method="POST" class="w-100" onsubmit="showButtonLoading(this)">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-success btn-modern-peminjaman w-100">
-                                    <i class="fas fa-check-circle me-1"></i> Selesaikan
-                                </button>
-                            </form>
                         ` : ''}
                     </div>
                 </td>
