@@ -1,5 +1,8 @@
 
 # DOCUMENTATION
+berikut link dokumentasi yang saya buat di google dokumen.
+https://docs.google.com/document/d/1z8TsJ4dwM_vM7CrQD1zn1YP1EausjAPSBrIDUJVqSy4/edit?usp=sharing
+
 
 ## Deskripsi Sistem
 
