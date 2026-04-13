@@ -15,59 +15,63 @@
             <span>Statistik real-time semua peminjaman alat medis</span>
         </p>
 
-        <div class="stats-cards">
-            <div class="stat-card-modern">
-                <div class="stat-icon-modern blue">
-                    <i class="fas fa-clock"></i>
+        <div class="stats-cards-wrapper">
+            <div class="stats-cards-row">
+                <div class="stat-card-modern">
+                    <div class="stat-icon-modern blue">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info-modern">
+                        <div class="stat-value-modern" id="stat-menunggu">{{ $total_menunggu ?? 0 }}</div>
+                        <div class="stat-label-modern">Menunggu Persetujuan</div>
+                        <small>Perlu verifikasi segera</small>
+                    </div>
                 </div>
-                <div class="stat-info-modern">
-                    <div class="stat-value-modern" id="stat-menunggu">{{ $total_menunggu ?? 0 }}</div>
-                    <div class="stat-label-modern">Menunggu Persetujuan</div>
-                    <small>Perlu verifikasi segera</small>
+
+                <div class="stat-card-modern">
+                    <div class="stat-icon-modern green">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info-modern">
+                        <div class="stat-value-modern" id="stat-disetujui">{{ $total_disetujui ?? 0 }}</div>
+                        <div class="stat-label-modern">Disetujui</div>
+                        <small>Menunggu pengiriman</small>
+                    </div>
+                </div>
+
+                <div class="stat-card-modern">
+                    <div class="stat-icon-modern primary">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-info-modern">
+                        <div class="stat-value-modern" id="stat-dikirim">{{ $total_dikirim ?? 0 }}</div>
+                        <div class="stat-label-modern">Dikirim</div>
+                        <small>Dalam perjalanan</small>
+                    </div>
                 </div>
             </div>
 
-            <div class="stat-card-modern">
-                <div class="stat-icon-modern green">
-                    <i class="fas fa-check-circle"></i>
+            <div class="stats-cards-row">
+                <div class="stat-card-modern">
+                    <div class="stat-icon-modern purple">
+                        <i class="fas fa-hand-holding-medical"></i>
+                    </div>
+                    <div class="stat-info-modern">
+                        <div class="stat-value-modern" id="stat-dipinjam">{{ $total_dipinjam ?? 0 }}</div>
+                        <div class="stat-label-modern">Sedang Dipinjam</div>
+                        <small>Aktif dipinjam</small>
+                    </div>
                 </div>
-                <div class="stat-info-modern">
-                    <div class="stat-value-modern" id="stat-disetujui">{{ $total_disetujui ?? 0 }}</div>
-                    <div class="stat-label-modern">Disetujui</div>
-                    <small>Menunggu pengiriman</small>
-                </div>
-            </div>
 
-            <div class="stat-card-modern">
-                <div class="stat-icon-modern primary">
-                    <i class="fas fa-truck"></i>
-                </div>
-                <div class="stat-info-modern">
-                    <div class="stat-value-modern" id="stat-dikirim">{{ $total_dikirim ?? 0 }}</div>
-                    <div class="stat-label-modern">Dikirim</div>
-                    <small>Dalam perjalanan</small>
-                </div>
-            </div>
-
-            <div class="stat-card-modern">
-                <div class="stat-icon-modern purple">
-                    <i class="fas fa-hand-holding-medical"></i>
-                </div>
-                <div class="stat-info-modern">
-                    <div class="stat-value-modern" id="stat-dipinjam">{{ $total_dipinjam ?? 0 }}</div>
-                    <div class="stat-label-modern">Sedang Dipinjam</div>
-                    <small>Aktif dipinjam</small>
-                </div>
-            </div>
-
-            <div class="stat-card-modern">
-                <div class="stat-icon-modern orange">
-                    <i class="fas fa-undo-alt"></i>
-                </div>
-                <div class="stat-info-modern">
-                    <div class="stat-value-modern" id="stat-dikembalikan">{{ $total_dikembalikan ?? 0 }}</div>
-                    <div class="stat-label-modern">Dikembalikan</div>
-                    <small>Menunggu pengecekan</small>
+                <div class="stat-card-modern">
+                    <div class="stat-icon-modern orange">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <div class="stat-info-modern">
+                        <div class="stat-value-modern" id="stat-dikembalikan">{{ $total_dikembalikan ?? 0 }}</div>
+                        <div class="stat-label-modern">Dikembalikan</div>
+                        <small>Menunggu pengecekan</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -138,7 +142,7 @@
 
 <style>
     /* ===============================
-       HEADER & STATS CARDS - EXACT SAME AS transaksi/riwayat
+       HEADER & STATS CARDS - 3 ATAS 2 BAWAH
        =============================== */
     .dashboard-header {
         background: linear-gradient(145deg, #0b2c5d, #1f3c88);
@@ -185,13 +189,24 @@
         margin-bottom: 1.5rem;
     }
 
-    /* Stats Cards - EXACT SAME AS transaksi/riwayat */
-    .stats-cards {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 1.5rem;
+    /* Stats Cards Wrapper - 3 ATAS 2 BAWAH */
+    .stats-cards-wrapper {
         position: relative;
         z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .stats-cards-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .stats-cards-row:last-child {
+        grid-template-columns: repeat(2, 1fr);
+        justify-content: center;
     }
 
     .stat-card-modern {
@@ -310,8 +325,13 @@
 
     /* Responsive */
     @media (max-width: 1200px) {
-        .stats-cards {
+        .stats-cards-row {
             grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .stats-cards-row:last-child {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
@@ -324,9 +344,13 @@
             font-size: 1.5rem;
         }
 
-        .stats-cards {
-            grid-template-columns: repeat(2, 1fr);
+        .stats-cards-row {
+            grid-template-columns: 1fr;
             gap: 1rem;
+        }
+
+        .stats-cards-row:last-child {
+            grid-template-columns: 1fr;
         }
 
         .stat-card-modern {
@@ -349,7 +373,11 @@
     }
 
     @media (max-width: 480px) {
-        .stats-cards {
+        .stats-cards-row {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-cards-row:last-child {
             grid-template-columns: 1fr;
         }
     }

@@ -91,11 +91,6 @@
                         <small class="text-muted">Opsional: Informasi tambahan seperti titik temu, ciri-ciri lokasi, dll.</small>
                     </div>
 
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Informasi:</strong> Setelah pengiriman dibuat, status transaksi akan berubah menjadi "Dikirim" dan peminjam akan menerima notifikasi untuk mengkonfirmasi penerimaan barang.
-                    </div>
-
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('petugas.pengiriman.index') }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left me-1"></i> Kembali

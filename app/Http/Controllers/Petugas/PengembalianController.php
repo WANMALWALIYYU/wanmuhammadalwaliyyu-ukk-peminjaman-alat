@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Petugas;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengembalian;
+use App\Models\Produk;
 use App\Models\Transaksi;
 use App\Traits\LogsActivity;
 use Illuminate\Http\Request;
@@ -199,25 +200,44 @@ class PengembalianController extends Controller
     public function complete($id)
     {
         $pengembalian = Pengembalian::where('status', Pengembalian::STATUS_DIPROSES)
+            ->with(['transaksi.detailTransaksis.produk']) // Eager load detail transaksi dan produk
             ->findOrFail($id);
 
         DB::beginTransaction();
 
         try {
+            // Tambahkan stok produk sesuai dengan jumlah yang dipinjam
+            foreach ($pengembalian->transaksi->detailTransaksis as $detail) {
+                $produk = Produk::find($detail->produk_id);
+                if ($produk) {
+                    // Tambah stok sesuai jumlah yang dipinjam
+                    $produk->increment('stok', $detail->jumlah);
+
+                    // Update status produk menjadi 'tersedia' jika stok > 0
+                    if ($produk->stok > 0) {
+                        $produk->update(['status' => 'tersedia']);
+                    }
+                }
+            }
+
+            // Selesaikan pengembalian
             $pengembalian->complete();
+
+            // Update transaksi status menjadi SELESAI
+            $pengembalian->transaksi->update(['status' => Transaksi::STATUS_SELESAI]);
 
             $this->logActivity(
                 'complete',
                 'pengembalian',
                 $pengembalian->id,
                 $pengembalian->transaksi->kode_transaksi,
-                "Petugas " . Auth::user()->name . " menyelesaikan proses pengembalian untuk transaksi {$pengembalian->transaksi->kode_transaksi}"
+                "Petugas " . Auth::user()->name . " menyelesaikan proses pengembalian untuk transaksi {$pengembalian->transaksi->kode_transaksi} dan mengembalikan stok produk"
             );
 
             DB::commit();
 
             return redirect()->route('petugas.pengembalian.show', $pengembalian->id)
-                ->with('success', 'Proses pengembalian selesai. Status berubah menjadi "Selesai". User sekarang dapat melakukan pembayaran pelunasan.');
+                ->with('success', 'Proses pengembalian selesai. Stok produk telah dikembalikan.');
 
         } catch (\Exception $e) {
             DB::rollBack();

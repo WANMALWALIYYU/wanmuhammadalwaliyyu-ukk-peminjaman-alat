@@ -118,6 +118,42 @@
             font-size: 1.1rem;
         }
 
+        /* Dropdown Menu Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .dropdown-arrow {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-dropdown.open .dropdown-arrow {
+            transform: rotate(90deg);
+        }
+
+        .nav-submenu {
+            padding-left: 48px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .nav-dropdown.open .nav-submenu {
+            max-height: 500px;
+        }
+
+        .nav-submenu .nav-link {
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            margin: 4px 16px;
+        }
+
+        .nav-submenu .nav-link i {
+            font-size: 0.85rem;
+            width: 20px;
+        }
+
         /* Logo Section */
         .sidebar-logo {
             padding: 1.5rem;
@@ -378,14 +414,25 @@
                     href="{{ route('petugas.pengembalian.index') }}">
                         <i class="fas fa-history"></i> Pengembalian
                     </a>
-                    <a class="nav-link {{ request()->routeIs('petugas.pengiriman*') ? 'active' : '' }}"
-                    href="{{ route('petugas.pengiriman.index') }}">
-                        <i class="fas fa-truck"></i> Pengiriman
-                    </a>
-                    <a class="nav-link {{ request()->routeIs('petugas.pengiriman.in-progress') ? 'active' : '' }}"
-                    href="{{ route('petugas.pengiriman.in-progress') }}">
-                        <i class="fas fa-truck-moving"></i> Dalam Proses
-                    </a>
+
+                    <!-- Dropdown Pengiriman -->
+                    <div class="nav-dropdown {{ request()->routeIs('petugas.pengiriman*') || request()->routeIs('petugas.pengiriman.in-progress') ? 'open' : '' }}">
+                        <a href="javascript:void(0);" class="nav-link" onclick="toggleDropdown(this)">
+                            <i class="fas fa-truck"></i> Pengiriman
+                            <i class="fas fa-chevron-right dropdown-arrow"></i>
+                        </a>
+                        <div class="nav-submenu">
+                            <a class="nav-link {{ request()->routeIs('petugas.pengiriman.index') ? 'active' : '' }}"
+                            href="{{ route('petugas.pengiriman.index') }}">
+                                <i class="fas fa-truck"></i> Semua Pengiriman
+                            </a>
+                            <a class="nav-link {{ request()->routeIs('petugas.pengiriman.in-progress') ? 'active' : '' }}"
+                            href="{{ route('petugas.pengiriman.in-progress') }}">
+                                <i class="fas fa-truck-moving"></i> Dalam Proses
+                            </a>
+                        </div>
+                    </div>
+
                     <hr class="mx-3 my-2" style="border-color: rgba(255,255,255,0.1);">
                     <a class="nav-link" href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -492,6 +539,23 @@
         function hideLoading() {
             $('#loadingOverlay').fadeOut(200);
         }
+
+        // Toggle Dropdown function
+        function toggleDropdown(element) {
+            const parent = element.closest('.nav-dropdown');
+            if (parent) {
+                parent.classList.toggle('open');
+            }
+        }
+
+        // Close dropdown when clicking outside (optional)
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.nav-dropdown')) {
+                document.querySelectorAll('.nav-dropdown.open').forEach(function(dropdown) {
+                    dropdown.classList.remove('open');
+                });
+            }
+        });
     </script>
 
     @stack('scripts')
